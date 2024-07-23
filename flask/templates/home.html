@@ -1,0 +1,10 @@
+<!doctype html>
+<title>Password Verification</title>
+<h1>Enter your password</h1>
+<form method=post>
+    <input type=password name=password>
+    <input type=submit value=Login>
+</form>
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}

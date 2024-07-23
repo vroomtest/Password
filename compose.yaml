@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Jenkins service configuration
+  jenkins:
+    build: 
+      context: ./jenkins
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # SonarQube service configuration
+  sonarqube:
+    image: sonarqube:lts
+    ports:
+      - "9000:9000"  
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true  
+      - SONARQUBE_JDBC_URL=jdbc:mysql://db:3306/sonarqube
+      - SONARQUBE_JDBC_USERNAME=sonarqube  
+      - SONARQUBE_JDBC_PASSWORD=sonarqube  
+
+  # MySQL database service configuration
+  db:
+    image: mysql:latest   
+    environment:
+      MYSQL_ROOT_PASSWORD: P@ssw0rdqwe!@
+      MYSQL_DATABASE: sonarqube  
+      MYSQL_USER: sonarqube  
+      MYSQL_PASSWORD: sonarqube  
+
+  # Git service configuration
+  git: 
+      image: alpine/git 
+      container_name: git 
+      entrypoint: /bin/sh -c "git config --global user.name 'Test' && git config --global user.email 'test@sit.singaporetech.edu.sg' && tail -f /dev/null"
+
+volumes:
+  jenkins_home:
